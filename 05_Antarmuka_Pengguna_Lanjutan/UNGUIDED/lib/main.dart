@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui'; // Import this to use BackdropFilter
 
 void main() {
   runApp(const MainApp());
@@ -10,112 +11,59 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // Hide the debug banner
       home: Scaffold(
-        body: Column(
-          children: [
-            // Bagian Header tanpa melengkung dengan nuansa coklat muda
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: const BoxDecoration(
-                color: Color(0xFFD2B48C), // Warna coklat muda
-              ),
-              child: const Center(
-                child: Text(
+        body: CustomScrollView(
+          slivers: [
+            // SliverAppBar as header
+            SliverAppBar(
+              expandedHeight: 250, // Height for a larger image background
+              backgroundColor: const Color.fromARGB(
+                  255, 189, 124, 54), // Solid brown background
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Background image
+                    Image.network(
+                      'https://lh5.googleusercontent.com/p/AF1QipNMBJMKRWBsd5ZAfj5WwvfWWzFhXyiyPT2UAb7v=w810-h468-n-k-no',
+                      fit: BoxFit.cover,
+                    ),
+                    // Apply blur effect
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 5.0, sigmaY: 5.0), // Adjust blur strength
+                      child: Container(
+                        color: const Color(
+                            0xAA8B4513), // Semi-transparent brown overlay
+                      ),
+                    ),
+                  ],
+                ),
+                titlePadding:
+                    const EdgeInsets.only(bottom: 16.0), // Adjust padding
+                centerTitle: true,
+                title: const Text(
                   'Rekomendasi Wisata di Banyumas',
                   style: TextStyle(
                     fontFamily: 'Roboto',
-                    color: Colors.white,
-                    fontSize: 38,
+                    fontSize: 28, // Larger font size
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
+              pinned: true, // Keep the title pinned when scrolling
             ),
 
-            // Bagian konten daftar wisata dengan deskripsi
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  itemCount: wisataBanyumasImages.length, // Panjang list image
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.all(8.0), // Tambah margin
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.brown.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // Posisi shadow
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          /// Gambar wisata
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                30), // Sudut melengkung lebih halus
-                            child: Container(
-                              padding: const EdgeInsets.all(
-                                  8.0), // Menambahkan padding di sekitar gambar
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    30), // Sama dengan ClipRRect
-                                color: Colors
-                                    .white, // Warna latar belakang agar terlihat jelas
-                              ),
-                              child: Image.network(
-                                wisataBanyumasImages[
-                                    index], // Ambil gambar sesuai indeks
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(
-                                    Icons.image_not_supported,
-                                    size: 150,
-                                    color: Colors.grey,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          // Nama dan Deskripsi Wisata
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    wisataBanyumasTitles[
-                                        index], // Tampilkan title sesuai indeks
-                                    style: const TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color(0xFF8B4513), // Warna coklat tua
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                      height:
-                                          8), // Jarak antara title dan deskripsi
-                                  _buildDescription(
-                                      wisataBanyumasDescriptions[index]),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+            // SliverList for the list of tourist spots
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return _buildTourCard(context, index);
+                },
+                childCount: wisataBanyumasImages.length,
               ),
             ),
           ],
@@ -124,24 +72,169 @@ class MainApp extends StatelessWidget {
     );
   }
 
-  // Fungsi untuk membangun deskripsi
+  // Function to build the tourist card
+  Widget _buildTourCard(BuildContext context, int index) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double imageSize = screenWidth * 0.3; // 30% of screen width
+
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.brown.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image section on the left with padding and dynamic size
+          Padding(
+            padding: const EdgeInsets.all(8.0), // Add padding around the image
+            child: ClipRRect(
+              borderRadius:
+                  BorderRadius.circular(10), // Make the image corners rounded
+              child: Container(
+                width: imageSize,
+                height: imageSize,
+                decoration: BoxDecoration(
+                  color: Colors
+                      .grey[200], // Background color to handle loading state
+                ),
+                child: Image.network(
+                  wisataBanyumasImages[index],
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.image_not_supported,
+                      size: 150,
+                      color: Colors.grey,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+
+          // Text section on the right
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    wisataBanyumasTitles[index],
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF8B4513),
+                    ),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: _buildDescription(wisataBanyumasDescriptions[index]),
+                  ),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        _showDetails(context, index);
+                      },
+                      child: const Text(
+                        'Selengkapnya',
+                        style: TextStyle(
+                          color: Color(0xFF8B4513),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Function to build the description
   Widget _buildDescription(String description) {
-    const int maxLines = 2; // Batas jumlah baris
+    const int maxLines = 3; // Increased max lines
 
     return Text(
       description,
       maxLines: maxLines,
-      overflow:
-          TextOverflow.ellipsis, // Tambah elipsis jika lebih dari dua baris
+      overflow: TextOverflow.ellipsis,
       style: const TextStyle(
-        fontSize: 16,
-        color: Colors.black, // Warna teks deskripsi agar lebih jelas
+        fontSize: 20,
+        color: Colors.black,
       ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  // Show details when the "Selengkapnya" button is pressed
+  void _showDetails(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(wisataBanyumasTitles[index]),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    wisataBanyumasImages[index],
+                    height: 150,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.image_not_supported,
+                        size: 150,
+                        color: Colors.grey,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  wisataBanyumasDescriptions[index],
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Tutup'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
-// Daftar gambar wisata di Banyumas
+// List of tourist spot images in Banyumas
 final List<String> wisataBanyumasImages = [
   'https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRKDQQ1xRt7zQrFBFKaKQBUrQEQy9aa11VOdskTepiHTDRpSnv95gIiys4gfjqmTK8zwvyqu5Nl9ffBMMWGTNU1_zmISGhTPrqrxGlRZA',
   'https://lh5.googleusercontent.com/p/AF1QipNPHridL3nzxEX4MgylxK3kNSwKeFqi7Z0X-taM=w810-h468-n-k-no',
@@ -149,7 +242,7 @@ final List<String> wisataBanyumasImages = [
   'https://lh5.googleusercontent.com/p/AF1QipNoO_1prFxo5Xn4OdjNMvReMgBZrw_gwzFdjND7=w810-h468-n-k-no',
 ];
 
-// Daftar title wisata di Banyumas
+// List of titles for tourist spots in Banyumas
 final List<String> wisataBanyumasTitles = [
   'Curug Cipendok',
   'Pancuran Pitu Baturaden',
@@ -157,10 +250,10 @@ final List<String> wisataBanyumasTitles = [
   'Hutan Pinus Limpakuwus',
 ];
 
-// Daftar deskripsi wisata di Banyumas
+// List of descriptions for tourist spots in Banyumas
 final List<String> wisataBanyumasDescriptions = [
-  'Curug Cipendok adalah air terjun megah setinggi 92 meter yang terletak di Banyumas, dikelilingi oleh hutan tropis yang lebat dan alami. Keindahan alamnya yang menakjubkan menjadikan tempat ini sebagai salah satu destinasi wisata alam yang populer di daerah ini. Suara gemericik air yang jatuh menciptakan melodi alam yang menenangkan, sementara pepohonan hijau yang rimbun memberikan suasana sejuk dan segar. Pengunjung dapat menikmati berbagai aktivitas, seperti trekking menuju air terjun dan bersantai sambil menikmati pemandangan spektakuler. Tak hanya itu, Curug Cipendok juga menjadi lokasi yang ideal untuk fotografi, di mana setiap sudutnya menawarkan latar belakang yang indah dan menakjubkan.',
-  'Pancuran Pitu Baturaden adalah sumber air panas alami yang terkenal dengan manfaat kesehatannya, terletak di kawasan pegunungan Baturaden yang sejuk dan asri. Tempat ini terdiri dari tujuh pancuran dengan air yang mengandung mineral yang baik untuk kesehatan, sehingga banyak pengunjung yang datang untuk merasakan kehangatan dan kesegaran airnya. Selain berfungsi sebagai tempat relaksasi, Pancuran Pitu juga menawarkan pemandangan alam yang memukau, di mana pengunjung dapat menikmati udara segar pegunungan sambil berendam. Dikelilingi oleh hutan dan perbukitan, pengalaman di Pancuran Pitu tidak hanya memberikan manfaat kesehatan, tetapi juga ketenangan jiwa yang sulit ditemukan di tempat lain.',
-  'Telaga Sunyi adalah sebuah danau kecil yang tersembunyi di tengah hutan Baturaden, dikenal dengan airnya yang jernih dan suasana yang tenang. Keindahan dan ketenangan Telaga Sunyi membuatnya menjadi tempat pelarian yang sempurna dari hiruk-pikuk kehidupan sehari-hari. Air danau yang berkilau dipantulkan oleh sinar matahari, menciptakan panorama yang sangat menawan. Dikelilingi oleh pepohonan dan flora yang rimbun, pengunjung dapat menikmati waktu bersantai di tepi danau, melakukan piknik, atau sekadar merenung dalam suasana damai. Telaga Sunyi juga merupakan lokasi yang ideal bagi para penggemar fotografi dan pecinta alam yang ingin menangkap keindahan alam yang autentik.',
-  'Hutan Pinus Limpakuwus adalah kawasan wisata yang menawarkan pemandangan hutan pinus yang sejuk dan alami, menjadikannya lokasi yang sangat populer untuk kegiatan berkemah dan berswafoto. Dengan udara yang segar dan aroma khas pinus, hutan ini menawarkan pengalaman yang menyegarkan bagi para pengunjung. Trekking di antara pepohonan tinggi dan rimbun memberikan kesempatan untuk menjelajahi keindahan alam dan menikmati ketenangan yang ditawarkan oleh hutan. Selain itu, banyak spot foto menarik yang bisa ditemukan di dalam kawasan ini, membuat Hutan Pinus Limpakuwus menjadi tempat yang sempurna untuk mengabadikan momen indah bersama teman atau keluarga. Suasana yang tenang dan keindahan alamnya menjadikan tempat ini sebagai tujuan ideal bagi siapa saja yang ingin menjauh dari kesibukan dan menikmati kedamaian alam.',
+  'Curug Cipendok adalah air terjun megah setinggi 92 meter yang terletak di Banyumas. Tempat ini menawarkan pemandangan alam yang indah dan udara yang sejuk. Cocok untuk para pecinta alam dan fotografi. Banyak pengunjung yang datang untuk menikmati keindahan alam di sekitar air terjun ini dan berfoto di spot-spot menarik.',
+  'Pancuran Pitu Baturaden adalah sumber air panas alami yang terkenal dengan manfaat kesehatannya. Banyak pengunjung yang datang untuk merasakan kesegaran air panas dan menikmati pemandangan sekitar. Sumber air panas ini juga memiliki kolam-kolam kecil yang dapat digunakan untuk berendam, memberikan pengalaman relaksasi yang menyegarkan.',
+  'Telaga Sunyi adalah sebuah danau kecil yang tersembunyi di tengah hutan Baturaden. Tempat ini sangat tenang dan cocok untuk bersantai serta menikmati keindahan alam. Suasana yang damai dan jauh dari keramaian membuatnya ideal untuk meditasi atau sekadar menikmati alam. Banyak pengunjung yang membawa makanan piknik dan menghabiskan waktu di sini.',
+  'Hutan Pinus Limpakuwus adalah kawasan wisata yang menawarkan pemandangan hutan pinus yang sejuk dan menenangkan. Pengunjung bisa berjalan-jalan di antara pepohonan pinus dan menikmati udara segar. Terdapat jalur trekking yang bisa dijelajahi, serta area untuk berkemah bagi mereka yang ingin merasakan suasana malam di tengah hutan. Hutan ini juga sering dijadikan lokasi foto pre-wedding karena keindahan alamnya.',
 ];
