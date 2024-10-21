@@ -36,3 +36,12 @@ List Data: Tiga list terpisah berisi gambar, judul, dan deskripsi untuk masing-m
 Menggunakan `MediaQuery` untuk membuat tampilan responsif, di mana ukuran gambar disesuaikan dengan lebar layar perangkat.
 
 ## Screenshoot Aplikasi
+Desktop
+![App Screenshot](./asset/ss_full_desktop.png)
+![App Screenshot](./asset/ss_tengah_desktop.png)
+![App Screenshot](./asset/ss_selengkapnya_desktop.png)
+
+Mobile
+![App Screenshot](./asset/ss_full_mobile.png)
+![App Screenshot](./asset/ss_tengah_mobile.png)
+![App Screenshot](./asset/ss_selengkapnya_mobile.png)
