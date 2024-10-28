@@ -1,30 +1,43 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:unguided_wisata/main.dart'; // Sesuaikan dengan struktur project
+import 'package:tugas5_advance_layout/main.dart'; // Pastikan import ini sesuai dengan nama aplikasi Anda.
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MainApp()); // Ubah dari MyApp ke MainApp
+  testWidgets('Test bottom navigation bar and page view',
+      (WidgetTester tester) async {
+    // Build the app and trigger a frame.
+    await tester.pumpWidget(MyApp());
 
-    // Verifikasi bahwa counter dimulai dari 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that initially the Home page is displayed.
+    expect(find.text('Home page'), findsOneWidget);
+    expect(find.text('Email page'), findsNothing);
+    expect(find.text('Profile page'), findsNothing);
 
-    // Tap pada icon '+' dan trigger frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Tap the 'Email' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.email));
+    await tester.pumpAndSettle();
 
-    // Verifikasi bahwa counter bertambah menjadi 1.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the Email page is displayed.
+    expect(find.text('Home page'), findsNothing);
+    expect(find.text('Email page'), findsOneWidget);
+    expect(find.text('Profile page'), findsNothing);
+
+    // Tap the 'Profile' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.person));
+    await tester.pumpAndSettle();
+
+    // Verify that the Profile page is displayed.
+    expect(find.text('Home page'), findsNothing);
+    expect(find.text('Email page'), findsNothing);
+    expect(find.text('Profile page'), findsOneWidget);
+
+    // Tap the 'Home' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.home));
+    await tester.pumpAndSettle();
+
+    // Verify that the Home page is displayed again.
+    expect(find.text('Home page'), findsOneWidget);
+    expect(find.text('Email page'), findsNothing);
+    expect(find.text('Profile page'), findsNothing);
   });
 }
