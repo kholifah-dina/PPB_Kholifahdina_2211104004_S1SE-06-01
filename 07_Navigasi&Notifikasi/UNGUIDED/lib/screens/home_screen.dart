@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('E-Commerce App'),
+        title: Text('Robot Produk'),
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(10),

@@ -10,6 +10,9 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = DUMMY_PRODUCTS.firstWhere((prod) => prod.id == id);
+    final double priceInRupiah =
+        product.price; // Tidak perlu mengalikan dengan kurs
+
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
@@ -19,7 +22,7 @@ class ProductDetailScreen extends StatelessWidget {
           Image.network(product.imageUrl),
           SizedBox(height: 10),
           Text(
-            '\$${product.price}',
+            'Rp ${priceInRupiah.toStringAsFixed(0)}',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),

@@ -11,7 +11,7 @@ class DetailProduct extends StatelessWidget {
       appBar: AppBar(
         title: Text('Detail Product'),
         centerTitle: true,
-        backgroundColor: Colors.blue[300],
+        backgroundColor: const Color.fromARGB(255, 224, 193, 101),
       ),
       body: Center(
         child: Text(data),
