@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "236226652992",
-    "project_id": "ppb-me",
-    "storage_bucket": "ppb-me.firebasestorage.app"
+    "project_number": "431525824028",
+    "project_id": "pratikum11-a3911",
+    "storage_bucket": "pratikum11-a3911.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:236226652992:android:060d9613ae4ad7ede828a5",
+        "mobilesdk_app_id": "1:431525824028:android:1b8b6c27e0d25f9e28c1d9",
         "android_client_info": {
           "package_name": "com.example.guide11"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBbF41z1UOy9ZA5wqIhVhbfeNYkhIgQsR8"
+          "current_key": "AIzaSyCPYlDqzqPAYnsATyYXmkiWuYP7A4NwBsk"
         }
       ],
       "services": {
