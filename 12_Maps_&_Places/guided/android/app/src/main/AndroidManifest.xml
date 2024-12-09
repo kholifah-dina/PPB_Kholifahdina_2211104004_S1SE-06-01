@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="maps"
+        android:label="cobaa"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCqhai6sj74WclmrON5xrXd0xzzKHhuUR8"/>
-        
+            android:value="AIzaSyBzXgN3biTY06ODbLlytCXWk_nktX5kZtA"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
