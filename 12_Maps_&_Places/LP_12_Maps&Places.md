@@ -238,3 +238,10 @@ class _MyHomePageState extends State<MyHomePage> {
 ## Hasil Output Unguided
 ![App Screenshot](/folder_img/ss_unguided1.jpg)
 ![App Screenshot](/folder_img/ss_unguided2.jpg)
+
+
+## Penjelasan Program
+
+Program ini adalah aplikasi Flutter sederhana yang mengintegrasikan Google Maps dan fitur Place Picker untuk menampilkan peta dengan marker, lokasi tertentu, dan pencarian tempat. Aplikasi dimulai dengan lokasi awal di Köln, Jerman, yang ditampilkan pada peta menggunakan widget **GoogleMap**. Marker diletakkan di lokasi pusat peta untuk menandai Köln. Pengguna dapat menggunakan tombol pencarian di bagian atas untuk membuka **Place Picker**, memungkinkan mereka mencari tempat lain berdasarkan alamat atau lokasi tertentu. Selain itu, di bagian bawah aplikasi, terdapat daftar tempat terdekat (misalnya, hotel) yang ditampilkan sebagai item interaktif menggunakan widget **ListTile**. 
+
+Aplikasi ini juga mendukung fitur seperti memperbesar atau memperkecil peta, dan menampilkan lokasi pengguna dengan **myLocationEnabled**. Struktur program ini diatur dengan pendekatan berbasis StatefulWidget untuk memungkinkan pembaruan dinamis pada peta dan daftar lokasi. Fitur ini ideal untuk aplikasi yang membutuhkan pencarian lokasi atau pemanduan berdasarkan peta, seperti aplikasi perjalanan atau pariwisata. Untuk menjalankan aplikasi ini, diperlukan API Key dari Google Maps yang telah diaktifkan untuk fitur Maps dan Place Picker.
