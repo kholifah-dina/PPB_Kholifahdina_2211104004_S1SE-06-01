@@ -1,155 +1,74 @@
 ## Laporan Guided & Unguided Modul 11 Firebase & Notifikasi
 
-1. Kode main.dart
+### Penjelasan Kode dan Fungsinya
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:guide11/my_notification_screen.dart';
+#### 1. **Kode `main.dart`**
+Kode ini adalah titik awal aplikasi Flutter yang mengonfigurasi Firebase dan menangani pesan dari Firebase Cloud Messaging (FCM).
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+- **Inisialisasi Firebase**: 
+  ```dart
   await Firebase.initializeApp();
+  ```
+  Menginisialisasi Firebase sebelum aplikasi mulai dijalankan, agar aplikasi dapat menggunakan layanan Firebase, seperti FCM.
+
+- **Handler Pesan di Background**: 
+  ```dart
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await FlutterLocalNotificationsPlugin()
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  runApp(const MyApp());
-}
+  ```
+  Menangani pesan FCM yang diterima ketika aplikasi berjalan di background atau tertutup. Pesan ini diproses oleh fungsi `_firebaseMessagingBackgroundHandler`.
 
-String? token;
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('Handling a background message: ${message.messageId}');
-}
+- **Membuat Channel Notifikasi**: 
+  ```dart
+  await FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+  ```
+  Membuat channel notifikasi untuk menampilkan pesan di perangkat Android dengan prioritas tinggi. 
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // ID Channel
-  'High Importance Notifications', // Nama Channel
-  description:
-      'This channel is used for important notifications.', //Deskripsi Channel
-  importance: Importance.high, // Prioritas
-);
+- **Pengaturan Notifikasi di Foreground**: 
+  ```dart
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+  ```
+  Mengatur agar aplikasi menampilkan notifikasi secara visual, suara, dan badge ketika aplikasi sedang aktif di foreground.
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+#### 2. **Kode `my_notification_screen.dart`**
+Kode ini menangani tampilan layar notifikasi dan cara aplikasi menangani pesan FCM.
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyNotificationScreen(),
-    );
-  }
-}
+- **Inisialisasi Notifikasi Lokal**: 
+  ```dart
+  var initializationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
+  var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+  FlutterLocalNotificationsPlugin().initialize(initializationSettings);
+  ```
+  Menyiapkan pengaturan untuk menampilkan notifikasi lokal pada perangkat Android menggunakan gambar ikon aplikasi.
 
-    2. Kode my_notification_screen
+- **Mendengarkan Pesan Masuk (Foreground)**:
+  ```dart
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {...});
+  ```
+  Fungsi ini mendengarkan pesan yang diterima saat aplikasi aktif. Ketika pesan diterima, aplikasi menampilkan notifikasi lokal menggunakan `FlutterLocalNotificationsPlugin`.
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:guide11/main.dart';
+- **Menangani Notifikasi yang Dibuka**:
+  ```dart
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {...});
+  ```
+  Fungsi ini menangani aksi ketika pengguna membuka notifikasi, seperti menampilkan dialog berisi pesan yang diterima.
 
-class MyNotificationScreen extends StatefulWidget {
-  const MyNotificationScreen({super.key});
+- **Mengambil Token FCM**:
+  ```dart
+  token = await FirebaseMessaging.instance.getToken();
+  print('FCM Token: $token');
+  ```
+  Mendapatkan token unik untuk perangkat yang digunakan agar aplikasi dapat mengirim pesan atau notifikasi ke perangkat tertentu.
 
-  @override
-  State<MyNotificationScreen> createState() => _MyNotificationScreenState();
-}
+#### 3. **Penjelasan Singkat**
 
-class _MyNotificationScreenState extends State<MyNotificationScreen> {
-  @override
-  void initState() {
-    super.initState();
+**Firebase Cloud Messaging (FCM)** adalah layanan dari Google untuk mengirimkan pesan dan notifikasi secara real-time ke perangkat pengguna, baik aplikasi dalam keadaan aktif atau tidak. 
 
-    var initializationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    FlutterLocalNotificationsPlugin().initialize(initializationSettings);
-// Mendengarkan pesan saat aplikasi aktif
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+Pada aplikasi ini, FCM digunakan untuk:
+- **Mengirim Notifikasi**: Pesan dapat dikirim dan diterima dalam aplikasi. Notifikasi lokal ditampilkan di perangkat menggunakan `flutter_local_notifications`.
+- **Menangani Pesan di Foreground dan Background**: Aplikasi menangani pesan FCM yang diterima baik saat aplikasi aktif (foreground) atau tidak aktif (background).
+- **Token Perangkat**: Setiap perangkat memiliki token unik yang digunakan untuk mengidentifikasi dan mengirimkan pesan atau notifikasi ke perangkat tersebut.
 
-// Jika notifikasi tersedia, tampilkan menggunakan notifikasi lokal
-      if (notification != null && android != null) {
-        FlutterLocalNotificationsPlugin().show(
-          notification.hashCode, // ID notifikasi (hashCode untuk unik)
-          notification.title, // Judul notifikasi
-          notification.body, // Isi notifikasi
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              color: Colors.blue,
-              icon: "@mipmap/ic_launcher",
-            ),
-          ),
-        );
-      }
-    });
-
-// Menangani aksi ketika notifikasi dibuka
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-// Jika notifikasi tersedia, tampilkan dialog
-      if (notification != null && android != null) {
-        showDialog(
-          context: context,
-          builder: (_) {
-            return AlertDialog(
-              title: Text(notification.title ?? ""), // Judul dialog
-              content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text(notification.body ?? "")], // Isi dialog
-                ),
-              ),
-            );
-          },
-        );
-      }
-    });
-
-// Memanggil metode untuk mengambil token FCM perangkat
-    getToken();
-  }
-
-// Metode untuk mendapatkan token FCM
-  void getToken() async {
-    token = await FirebaseMessaging.instance
-        .getToken(); // Mendapatkan token FCM perangkat
-    print('FCM Token: $token'); // Menampilkan token di log
-  }
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Notification Screen'),
-        backgroundColor: Colors.amber,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Text('Mendapatkan Notifikasi'),
-      ),
-    );
-  }
-}
+Dengan FCM, aplikasi dapat terus terhubung dengan penggunanya, memberikan pembaruan atau informasi penting, meskipun aplikasi tidak aktif.
 
 ## SS Ouput Guided
 ![App Screenshot](/folder_img/ss_page_awal.jpg)
