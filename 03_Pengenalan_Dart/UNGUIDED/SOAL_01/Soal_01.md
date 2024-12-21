@@ -29,3 +29,18 @@ Sampel Output: 50 merupakan Nilai B
 
 ![App Screenshot](./ss_soal_01.png)
 
+## Penjelasan Program
+Kode ini adalah program Dart yang mengevaluasi nilai dan mengembalikan grade berdasarkan input dari pengguna.
+
+1. Fungsi `evaluasiNilai` menerima parameter `nilai` dan mengembalikan grade:
+   - Nilai lebih dari 70 mendapatkan grade "A".
+   - Nilai antara 40 hingga 70 mendapatkan grade "B".
+   - Nilai antara 0 hingga 40 mendapatkan grade "C".
+   - Nilai yang tidak valid (misalnya negatif) menghasilkan nilai kosong.
+
+2. Fungsi `main`:
+   - Menggunakan `stdout.write` untuk meminta input nilai dari pengguna.
+   - Mengonversi input menjadi integer menggunakan `int.tryParse()`.
+   - Mengecek validitas input. Jika input valid, memanggil fungsi `evaluasiNilai` untuk menentukan grade dan menampilkan hasilnya. Jika input tidak valid, menampilkan pesan error.
+
+Program ini memberikan grade berdasarkan nilai yang dimasukkan oleh pengguna.

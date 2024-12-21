@@ -152,3 +152,9 @@ void greet(String name, int age) {
 void main() {
  greet('Alice', 25);
 }
+
+## Penjelasan Program
+Kode ini adalah program Dart yang mencetak pesan sapaan ke layar.
+
+- Fungsi `greet` menerima dua parameter: `name` (tipe String) dan `age` (tipe int). Di dalam fungsi, pesan sapaan dicetak menggunakan fungsi `print`, dengan menggabungkan nilai dari `name` dan `age` ke dalam string.
+- Fungsi `main` memanggil fungsi `greet` dengan argumen `'Alice'` untuk `name` dan `25` untuk `age`, sehingga hasilnya adalah output: `Hello Alice, you are 25 years old.`
