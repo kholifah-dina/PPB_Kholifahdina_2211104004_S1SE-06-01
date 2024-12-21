@@ -1,8 +1,11 @@
 ## LAPORAN MODUL 12 MAPS & PLACES
 
 ## Guided
-- File main.dart
+### Penjelasan Program Guided
 
+#### 1. **File `main.dart`**
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:maps/homepage.dart';
 
@@ -13,27 +16,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -41,9 +28,17 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+```
 
-- File homepage.dart
+**Penjelasan:**
+- **`main.dart`**: Ini adalah titik awal dari aplikasi Flutter. Pada file ini, aplikasi dimulai dengan `runApp()` yang mengeksekusi widget `MyApp`.
+- **`MaterialApp`**: Widget ini membungkus seluruh aplikasi dan menyediakan berbagai pengaturan dasar, seperti tema dan halaman utama.
+  - **`colorScheme`** mengatur warna tema aplikasi menggunakan `Colors.deepPurple`.
+  - **`home`** mengarahkan aplikasi untuk menampilkan widget **`MapsScreen`** sebagai halaman utama aplikasi yang akan menampilkan peta.
 
+#### 2. **File `homepage.dart`**
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -59,6 +54,7 @@ class _MapsScreenState extends State<MapsScreen> {
     target: _kMapCenter,
     zoom: 11.0,
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +68,25 @@ class _MapsScreenState extends State<MapsScreen> {
     );
   }
 }
+```
 
-## Hasil Output Guided
-![App Screenshot](/folder_img/ss_guided.jpg)
+**Penjelasan:**
+- **`MapsScreen`** adalah widget utama yang menampilkan peta Google.
+  - Widget ini menggunakan **`StatefulWidget`** karena peta bisa mengalami perubahan dinamis, seperti zoom atau pergerakan peta.
+  - **`_kMapCenter`** adalah koordinat pusat peta yang digunakan untuk menentukan lokasi awal yang ditampilkan di peta. Lokasi yang dipilih di sini adalah latitude 19.018255973653343 dan longitude 72.84793849278007.
+  - **`CameraPosition`**: Ini menentukan pengaturan tampilan awal peta, seperti posisi awal dan tingkat zoom.
+  
+- **`GoogleMap`**: Ini adalah widget yang digunakan untuk menampilkan peta dari **Google Maps** menggunakan package `google_maps_flutter`. 
+  - **`initialCameraPosition`**: Mengatur posisi dan tingkat zoom awal peta.
+  - **`myLocationEnabled`**: Diaktifkan untuk menunjukkan lokasi pengguna di peta.
 
 ## Unguided
-- file main.dart
+### Penjelasan Program Unguided
+### Penjelasan Program Unguided
 
+#### 1. **File `main.dart`**
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:maps/homepage.dart';
 
@@ -89,27 +97,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -117,9 +109,17 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+```
 
-- File homepage.dart
+**Penjelasan:**
+- **`main.dart`**: Ini adalah titik awal dari aplikasi Flutter. Pada file ini, aplikasi dimulai dengan `runApp()` yang mengeksekusi widget `MyApp`.
+- **`MaterialApp`**: Widget ini membungkus seluruh aplikasi dan menyediakan berbagai pengaturan dasar, seperti tema dan halaman utama.
+  - **`colorScheme`** mengatur warna tema aplikasi menggunakan `Colors.deepPurple`.
+  - **`home`** mengarahkan aplikasi untuk menampilkan widget **`MyHomePage`** sebagai halaman utama aplikasi, yang berfungsi untuk menampilkan peta.
 
+#### 2. **File `homepage.dart`**
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:place_picker_google/place_picker_google.dart';
@@ -234,14 +234,31 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+```
+
+**Penjelasan:**
+
+1. **`MyHomePage`** adalah widget utama yang digunakan untuk menampilkan peta dan lokasi terdekat, dengan fitur pencarian tempat.
+
+   - **`_kMapCenter`**: Titik pusat peta yang akan ditampilkan pertama kali (lokasi di Köln, Jerman).
+   - **`CameraPosition`**: Menentukan tampilan awal peta, dengan pengaturan posisi dan zoom.
+   - **`apiKey`**: Menyimpan API key Google Maps yang diperlukan untuk mengakses layanan Google Maps dan Place Picker.
+
+2. **`_createMarker()`**: Fungsi ini digunakan untuk menambahkan marker pada peta. Marker pertama ditambahkan di lokasi Köln dan menampilkan informasi tentang lokasi tersebut dengan menggunakan **`InfoWindow`**.
+
+3. **`_showPlacePicker()`**: Fungsi ini menampilkan widget **PlacePicker**, yang memungkinkan pengguna untuk memilih lokasi atau tempat lain. Ketika pengguna memilih tempat, aplikasi akan mengembalikan alamat tempat tersebut dan menampilkannya pada log.
+
+4. **`GoogleMap`**:
+   - **`initialCameraPosition`**: Menentukan posisi awal dan zoom peta.
+   - **`myLocationEnabled`**: Menampilkan lokasi pengguna di peta.
+   - **`markers`**: Menampilkan marker pada peta yang dibuat sebelumnya.
+
+5. **List Daftar Lokasi Terdekat**:
+   - Di bagian bawah layar, terdapat sebuah daftar **ListView** yang berisi nama-nama tempat terdekat. Daftar ini ditampilkan dengan **ListTile**, dan setiap item dapat ditekan untuk melihat informasi lebih lanjut mengenai tempat tersebut.
+
+6. **Widget `_buildNearbyPlaceItem`**: 
+   - Fungsi ini digunakan untuk membuat item lokasi yang ditampilkan dalam daftar tempat terdekat. Setiap item berisi nama tempat dan ikon tempat.
 
 ## Hasil Output Unguided
 ![App Screenshot](/folder_img/ss_unguided1.jpg)
 ![App Screenshot](/folder_img/ss_unguided2.jpg)
-
-
-## Penjelasan Program
-
-Program ini adalah aplikasi Flutter sederhana yang mengintegrasikan Google Maps dan fitur Place Picker untuk menampilkan peta dengan marker, lokasi tertentu, dan pencarian tempat. Aplikasi dimulai dengan lokasi awal di Köln, Jerman, yang ditampilkan pada peta menggunakan widget **GoogleMap**. Marker diletakkan di lokasi pusat peta untuk menandai Köln. Pengguna dapat menggunakan tombol pencarian di bagian atas untuk membuka **Place Picker**, memungkinkan mereka mencari tempat lain berdasarkan alamat atau lokasi tertentu. Selain itu, di bagian bawah aplikasi, terdapat daftar tempat terdekat (misalnya, hotel) yang ditampilkan sebagai item interaktif menggunakan widget **ListTile**. 
-
-Aplikasi ini juga mendukung fitur seperti memperbesar atau memperkecil peta, dan menampilkan lokasi pengguna dengan **myLocationEnabled**. Struktur program ini diatur dengan pendekatan berbasis StatefulWidget untuk memungkinkan pembaruan dinamis pada peta dan daftar lokasi. Fitur ini ideal untuk aplikasi yang membutuhkan pencarian lokasi atau pemanduan berdasarkan peta, seperti aplikasi perjalanan atau pariwisata. Untuk menjalankan aplikasi ini, diperlukan API Key dari Google Maps yang telah diaktifkan untuk fitur Maps dan Place Picker.
